@@ -1,1 +1,0 @@
-# Kece-ga-sih-
